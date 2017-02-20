@@ -26,7 +26,7 @@ $settings = array(
 
 
 
-
+//just took a break, will now continue coding.
 ////////////////////////////////
 
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
