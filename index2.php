@@ -13,12 +13,31 @@ $settings = array(
  
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";
-$getfield = '?screen_name=pewdiepie&count=200';
- 
-$twitter = new TwitterAPIExchange($settings);
- 
-$response = $twitter->setGetfield($getfield)
-                    ->buildOauth($url, $requestMethod)
-                    ->performRequest();
- 
-print_r($response);
+$tweets = array();
+$get_pages = 5;
+
+for($a=1;$a<=$get_pages;$a++){
+	$getfield = "?include_entities=true&include_rts=true&screen_name=twitterapi&count=100&page=$a";
+	 
+	$twitter = new TwitterAPIExchange($settings);
+	 
+	$response = $twitter->setGetfield($getfield)
+						->buildOauth($url, $requestMethod)
+						->performRequest();
+	 
+	$tweets[] = $response;
+
+}
+
+$total_count = 0;
+
+foreach($tweets as $tweet_obj) {
+	$tweet_array = json_decode($tweet_obj);
+	foreach ($tweet_array as $tweet){
+		echo $tweet->created_at." : ".$tweet->id_str." : ".$tweet->text;
+		echo '<br>';
+		$total_count ++;
+	}
+}
+
+echo "TOTAL TWEETS: $total_count";
