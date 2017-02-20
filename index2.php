@@ -10,14 +10,26 @@ $settings = array(
     'consumer_secret' => "Sg9xpVrhabOGarwdmnknpa8i3qYrEZmrCMM92UT6VYhVYI4b2j"
 );
 
- 
+////////////////////////////////
+//TIME OF DAY ACTIVE LOGIC HERE
+
+
+
+
+
+
+
+
+
+////////////////////////////////
+
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";
 $tweets = array();
 $get_pages = 5;
 
 for($a=1;$a<=$get_pages;$a++){
-	$getfield = "?include_entities=true&include_rts=true&screen_name=twitterapi&count=100&page=$a";
+	$getfield = "?include_entities=true&include_rts=true&screen_name=taylorswift13&count=100&page=$a"; // Alright, lets use Ms. Swift's tweets.
 	 
 	$twitter = new TwitterAPIExchange($settings);
 	 
