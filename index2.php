@@ -1,61 +1,59 @@
-<?php 
-// TWITTER HISTOGRAM TEST FOR hardtofind JSON VERSION
+<?php
+// TWITTER HISTOGRAM TEST FOR hardtofind
 // DATE: 20-FEB-17 
 // AUTHOR: Josep Eisen Montellano a.k.a. Eisen Grimbourne ;)
 
-// CHANGED TO TwitterAPIExchange, CANT FIND SOLUTION FOR RETIRIEVING 200 or MORE TWEETS for CODEBIRD
+// FINISHED @ can only retrieve 200 posts, will try other library
 
-// error1: SSL certificate problem: unable to get local issuer certificate fixed with "curl.cainfo=[localpath]cacert.pem" in php.ini
-// [localpath] is the path where the cacert.pem is
-require_once('src/TwitterAPIExchange.php');
- 
-$settings = array(
-    'oauth_access_token' => "833578446353690624-NXHh2cui4CZ55HlTl3dS2zVJ4t3sPgy",
-    'oauth_access_token_secret' => "Kp66KyGlCeJEbva083NzouAIlHdXpEpb5wwNWHVciXonS",
-    'consumer_key' => "VqNBgc0Ej0WJyptAcfEgVfKcL",
-    'consumer_secret' => "Sg9xpVrhabOGarwdmnknpa8i3qYrEZmrCMM92UT6VYhVYI4b2j"
+/*
+When creating a new twitter app, Callback URL must be set or else the application is locked to OOB mode and will not be able to use dynamic callbacks
+*/
+define('TWITTER_OAUTH_CONSUMER_KEY', 'VqNBgc0Ej0WJyptAcfEgVfKcL');
+define('TWITTER_OAUTH_CONSUMER_SECRET', 'Sg9xpVrhabOGarwdmnknpa8i3qYrEZmrCMM92UT6VYhVYI4b2j');
+define('TWITTER_OAUTH_TOKEN', '833578446353690624-NXHh2cui4CZ55HlTl3dS2zVJ4t3sPgy');
+define('TWITTER_OAUTH_TOKEN_SECRET', 'Kp66KyGlCeJEbva083NzouAIlHdXpEpb5wwNWHVciXonS');	
+
+require_once ('src/codebird.php');
+
+\Codebird\Codebird::setConsumerKey(
+  TWITTER_OAUTH_CONSUMER_KEY,
+  TWITTER_OAUTH_CONSUMER_SECRET
 );
 
-////////////////////////////////
-//TIME OF DAY ACTIVE LOGIC HERE
+$cb = \Codebird\Codebird::getInstance();
 
+$cb->setToken(
+  TWITTER_OAUTH_TOKEN,
+  TWITTER_OAUTH_TOKEN_SECRET
+);
 
+define('TWITTER_TIMELINE_USER', 'pewdiepie'); // Because pewdiepie is currently on a hot seat, we shall use his account. :D
 
+//////////////////////////////////
 
+// load the tweets
+$tweets = $cb->statuses_userTimeline([
+  'screen_name' => TWITTER_TIMELINE_USER,
+  'count' => '200'
+  // ,'exclude_replies' => true
+]);
 
+// check if tweet request was okay
+if ($tweets->httpstatus === 200) { // HTTP 200 is OK
+  // forget the httpstatus and rate limiting fields
+  unset($tweets->httpstatus);
+  unset($tweets->rate);
 
-
-
-//just took a break, will now continue coding.
-////////////////////////////////
-
-$url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-$requestMethod = "GET";
-$tweets = array();
-
-$get_pages = 5;
-
-for($a=1;$a<=$get_pages;$a++){
-	$getfield = "?include_entities=true&include_rts=true&screen_name=taylorswift13&count=100&page=$a"; // Alright, lets use Ms. Swift's tweets.
-	 
-	$twitter = new TwitterAPIExchange($settings);
-	 
-	$response = $twitter->setGetfield($getfield)
-						->buildOauth($url, $requestMethod)
-						->performRequest();
-	 
-	$tweets[] = $response;
+  $total_count = 0;
+  foreach ($tweets as $tweet) {
+	$text = $tweet->text;
+	$time = $tweet->created_at;
+	$last_id = $tweet->id;
+    echo "TIME: $time; ID: $last_id; <a href=''>$text</a>";
+	echo "<br>";
+	$total_count ++;
+	// var_dump($tweet);
+  }
+  
+  echo "TOTAL TWEETS: $total_count";
 }
-
-$total_count = 0;
-
-foreach($tweets as $tweet_obj) {
-	$tweet_array = json_decode($tweet_obj);
-	foreach ($tweet_array as $tweet){
-		echo $tweet->created_at." : ".$tweet->id_str." : ".$tweet->text;
-		echo '<br>';
-		$total_count ++;
-	}
-}
-
-echo "TOTAL TWEETS: $total_count";
