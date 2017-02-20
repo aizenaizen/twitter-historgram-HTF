@@ -1,4 +1,10 @@
 <?php 
+// TWITTER HISTOGRAM TEST FOR hardtofind JSON VERSION
+// DATE: 20-FEB-17 
+// AUTHOR: Josep Eisen Montellano a.k.a. Eisen Grimbourne ;)
+
+// CHANGED TO TwitterAPIExchange, CANT FIND SOLUTION FOR RETIRIEVING 200 or MORE TWEETS for CODEBIRD
+
 // error1: SSL certificate problem: unable to get local issuer certificate fixed with "curl.cainfo=[localpath]cacert.pem" in php.ini
 // [localpath] is the path where the cacert.pem is
 require_once('src/TwitterAPIExchange.php');
@@ -26,6 +32,7 @@ $settings = array(
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";
 $tweets = array();
+
 $get_pages = 5;
 
 for($a=1;$a<=$get_pages;$a++){
@@ -38,7 +45,6 @@ for($a=1;$a<=$get_pages;$a++){
 						->performRequest();
 	 
 	$tweets[] = $response;
-
 }
 
 $total_count = 0;

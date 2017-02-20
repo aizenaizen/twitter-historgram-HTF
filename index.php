@@ -3,7 +3,7 @@
 // DATE: 20-FEB-17 
 // AUTHOR: Josep Eisen Montellano a.k.a. Eisen Grimbourne ;)
 
-// FINISHED @ can only retrieve 200 posts, will try JSON API
+// FINISHED @ can only retrieve 200 posts, will try other library
 
 /*
 When creating a new twitter app, Callback URL must be set or else the application is locked to OOB mode and will not be able to use dynamic callbacks
