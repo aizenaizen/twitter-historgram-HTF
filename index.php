@@ -23,15 +23,13 @@ $tweets = array();
 
 $get_pages = 5;
 
+$twitter = new TwitterAPIExchange($settings);
+
 for($a=1;$a<=$get_pages;$a++){
 	$getfield = "?include_entities=true&include_rts=true&screen_name=taylorswift13&count=100&page=$a"; // Alright, lets use Ms. Swift's tweets.
-	 
-	$twitter = new TwitterAPIExchange($settings);
-	 
 	$response = $twitter->setGetfield($getfield)
 						->buildOauth($url, $requestMethod)
 						->performRequest();
-	 
 	$tweets[] = $response;
 }
 
